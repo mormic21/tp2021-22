@@ -40,7 +40,6 @@ public class CalculatorTest {
 	}
 
 	@Test
-	@Ignore
 	public void multiply() {
 		c.add(2);
 		c.multiply(2);
@@ -65,5 +64,18 @@ public class CalculatorTest {
 	public void squareRoot() {
 		c.squareRoot(4);
 		assertEquals(2, c.getResult());
+	}
+	
+	@Test
+	public void pow() {
+		c.pow(5);
+		assertEquals(25, c.getResult());
+	}
+	
+	@Test
+	public void pythagoras() {
+		c.pow(2);
+		c.pow(3);
+		assertEquals(13, c.getResult());
 	}
 }

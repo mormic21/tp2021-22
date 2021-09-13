@@ -16,11 +16,11 @@ public class Calculator {
 	}
 
 	public void subtract(int n) {
-		result = result + 1; // Bug
+		result = result - n;
 	}
 
 	public void multiply(int n) {
-		// TODO
+		result = result *n;
 	}
 
 	public void divide(int n) {
@@ -28,6 +28,11 @@ public class Calculator {
 	}
 
 	public void squareRoot(int n) {
-		for (;;); // Bug
+		result = (int)Math.sqrt(n);
 	}
+	
+	public void pow(int n) {
+		result = result + (int)Math.pow(n, 2);
+	}
+	
 }
