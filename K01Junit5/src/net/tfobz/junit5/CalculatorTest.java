@@ -1,21 +1,23 @@
-package net.tfobz.calculator;
-import org.junit.*;
-import static org.junit.Assert.assertEquals;
+package net.tfobz.junit5;
+
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+import java.time.Duration;
 
 public class CalculatorTest {
 	private static Calculator c = null;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUpBeforeClass() throws Exception {
 		c = new Calculator();
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void tearDownAfterClass() throws Exception {
 		c = null;
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		c.clear();
 	}
@@ -55,20 +57,29 @@ public class CalculatorTest {
 		assertEquals(1, c.getResult());
 	}
 
-	@Test(expected = ArithmeticException.class)
+	@Test
 	public void divideByZero() {
-		c.divide(0);
+		assertThrows(ArithmeticException.class, () -> c.divide(0));
 	}
 
-	@Test(timeout = 100)
+	@Test
+	@Disabled
 	public void squareRoot() {
-		c.squareRoot(4);
-		assertEquals(2, c.getResult());
+		assertTimeoutPreemptively(Duration.ofMillis(500), () -> {
+			c.squareRoot(4);
+			assertEquals(2, c.getResult());
+		});
 	}
-	
+
 	@Test
 	public void pow() {
 		c.pow(5);
 		assertEquals(25, c.getResult());
+	}
+	
+	@Test
+	public void pythagoras() {
+		c.pythagoras(2, 3);
+		assertEquals(13, c.getResult());
 	}
 }
