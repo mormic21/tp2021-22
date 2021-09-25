@@ -2,7 +2,7 @@ package net.tfobz.junit5;
 
 public class Calculator {
 	private static int result = 0;
-	private static int [] memory = new int[10];
+	private int [] memory = new int[10];
 
 	public int getResult() {
 		return result;
@@ -49,6 +49,30 @@ public class Calculator {
 		add(memory[1]);
 	}
 	
+	public boolean isthree(int n) {
+		boolean ret = false;
+		if (n == 3) {
+			return true;
+		}
+		return ret;
+	}
+	
+	public String retNull() {
+		String ret = null;
+		return ret;
+	}
+	
+	public int[] getMemory() {
+		return this.memory;
+	}
+	
+	public void setMemory(int[] array) {
+		memory = null;
+		memory = new int[10];
+		for (int i = 0; i < array.length; i++) {
+			memory[i] = array[i];
+		}
+	}
 	
 	
 }

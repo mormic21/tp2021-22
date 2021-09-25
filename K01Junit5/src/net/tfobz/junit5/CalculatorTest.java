@@ -82,4 +82,36 @@ public class CalculatorTest {
 		c.pythagoras(2, 3);
 		assertEquals(13, c.getResult());
 	}
+	
+	@Test
+	public void testTrue() {
+		assertTrue(c.isthree(3));
+	}
+	
+	@Test
+	public void testFalse() {
+		assertFalse(c.isthree(100));
+	}
+	
+	@Test
+	public void testNull() {
+		assertNull(c.retNull());
+	}
+	
+	@Test
+	public void testNotNull() {
+		assertNotNull(c.getMemory());
+	}
+	
+	@Test
+	public void testArray() {
+		int [] test = {1,8,7,56,45,2,8,2,2,44};
+		c.setMemory(test);
+		assertArrayEquals(test, c.getMemory());
+	}
+	
+	@Test
+	public void testSame() {
+		assertSame(c.getMemory(), c.getMemory());
+	}
 }
