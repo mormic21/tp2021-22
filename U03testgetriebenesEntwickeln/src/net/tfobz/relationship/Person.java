@@ -12,6 +12,19 @@ public class Person
 	protected ArrayList<Person> children = new ArrayList();
 	
 	public Person(String name, Gender gender) {
+		if (name == null) {
+			throw new IllegalArgumentException("Name ist NULL");
+		}
+		else {
+			if (name.length() == 0) {
+				throw new IllegalArgumentException("Name muss mindestens 1 Zeichen beinhalten");
+			}
+			else {
+				if (gender == null) {
+					throw new IllegalArgumentException("Gender ist null");
+				}
+			}
+		}
 		this.name = name;
 		this.gender = gender;
 	}
@@ -30,8 +43,13 @@ public class Person
 		return name;
 	}
 	public void setName(String name) {
-		if (name == null || name.length() == 0) {
-			throw new IllegalArgumentException("Name ist null oder nicht vorhanden");
+		if (name == null) {
+			throw new IllegalArgumentException("Name ist NULL");
+		}
+		else {
+			if (name.length() == 0) {
+				throw new IllegalArgumentException("Name muss mindestens 1 Zeichen beinhalten");
+			}
 		}
 		this.name = name;
 	}
@@ -52,5 +70,23 @@ public class Person
 	
 	public ArrayList<Person> getChildren() {
 		return children;
+	}
+	
+	/**
+	 * Equals
+	 */
+	@Override
+	public boolean equals(Object o) {
+		boolean ret = false;
+		if (o == null) {
+			throw new IllegalArgumentException("Vergleich mit NULL nicht möglich!");
+		}
+		if (o instanceof Person) {
+			Person other = (Person)o;
+			if (this.getName().equals(other.getName()) && this.getGender().equals(other.gender)) {
+				ret = true;
+			}
+		}
+		return ret;
 	}
 }
