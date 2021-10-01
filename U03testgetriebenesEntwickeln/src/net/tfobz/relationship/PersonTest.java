@@ -9,16 +9,19 @@ public class PersonTest {
 	private static Person p;
 	private static Person p1;
 	
+	@BeforeEach
+	public void create() {
+		p = new Person("Sepp", Gender.MALE);
+	}
+	
 	@Test
 	public void creation() {
-		p = new Person("Sepp", Gender.MALE);
 		assertEquals("Sepp", p.getName());
 		assertEquals(Gender.MALE, p.getGender());
 	}
 	
 	@Test
 	public void nameGenderEmpty() {
-		p = new Person("Sepp", Gender.MALE);
 		assertThrows(IllegalArgumentException.class, () -> {
 			p.setName(null);
 			p.setGender(null);
@@ -28,7 +31,6 @@ public class PersonTest {
 	
 	@Test
 	public void nameEmpty() throws Exception {
-		p = new Person("Sepp", Gender.MALE);
 		assertThrows(IllegalArgumentException.class, () -> {
 			p.setName(null);
 			p.setName("");
@@ -37,7 +39,6 @@ public class PersonTest {
 	
 	@Test
 	public void genderEmpty() throws Exception {
-		p = new Person("Sepp", Gender.MALE);
 		assertThrows(IllegalArgumentException.class, () -> {
 			p.setGender(null);
 		});
@@ -70,14 +71,12 @@ public class PersonTest {
 	
 	@Test
 	public void equals() {
-		p = new Person("Sepp", Gender.MALE);
 		p1 = new Person("Sepp", Gender.MALE);
 		assertTrue(p.equals(p1));
 	}
 	
 	@Test
 	public void equalsNull() {
-		p = new Person("Sepp", Gender.MALE);
 		p1 = null;
 		assertThrows(IllegalArgumentException.class, () -> {
 			assertTrue(p.equals(p1));
@@ -86,19 +85,27 @@ public class PersonTest {
 	
 	@Test
 	public void parent() {
-		p = new Person("Sepp", Gender.MALE);
-		Person m = new Person("m", Gender.FEMALE);
+		Person m = new Person("Mother", Gender.FEMALE);
 		p.setMother(m);
-		assertEquals("m", p.getMother().getName());
-		assertEquals(Gender.FEMALE, p.getMother().getGender());
+		assertEquals("Mother", p.getMother().getName());
 		p.setMother(null);
 		assertEquals(null, p.getMother());
 		//vater
-		Person v = new Person("v", Gender.MALE);
-		p.setFather(v);
-		assertEquals("v", p.getFather().getName());
-		assertEquals(Gender.MALE, p.getFather().getGender());
+		Person f = new Person("Father", Gender.MALE);
+		p.setFather(f);
+		assertEquals("Father", p.getFather().getName());
 		p.setFather(null);
 		assertEquals(null, p.getFather());
+	}
+	
+	@Test
+	public void parentIncorrectGender() {
+		Person father = new Person("Father", Gender.FEMALE);
+		Person mother = new Person("Mother", Gender.MALE);
+		assertThrows(IllegalArgumentException.class, () -> {
+			p.setMother(mother);
+			p.setFather(father);
+			assertTrue(p.equals(p1));
+		});
 	}
 }

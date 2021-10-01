@@ -11,6 +11,11 @@ public class Person
 	protected Person father = null;
 	protected ArrayList<Person> children = new ArrayList();
 	
+	/**
+	 * Person-Konstruktor
+	 * @param name
+	 * @param gender
+	 */
 	public Person(String name, Gender gender) {
 		if (name == null) {
 			throw new IllegalArgumentException("Name ist NULL");
@@ -42,6 +47,11 @@ public class Person
 	public String getName() {
 		return name;
 	}
+	
+	/**
+	 * setName
+	 * @param name
+	 */
 	public void setName(String name) {
 		if (name == null) {
 			throw new IllegalArgumentException("Name ist NULL");
@@ -57,15 +67,37 @@ public class Person
 	public Person getMother() {
 		return mother;
 	}
+	
 	public void setMother(Person mother) {
-		this.mother = mother;
+		if (mother == null) {
+			this.mother = null;
+		}
+		else {
+			if (mother.getGender().equals(Gender.FEMALE)) {
+				this.mother = mother;
+			}
+			else {
+				throw new IllegalArgumentException("Mutter hat falsches Geschlecht!");
+			}
+		}
 	}
 	
 	public Person getFather() {
 		return father;
 	}
+	
 	public void setFather(Person father) {
-		this.father = father;
+		if (father == null) {
+			this.father = null;
+		}
+		else {
+			if (father.getGender().equals(Gender.MALE)) {
+				this.father = father;
+			}
+			else {
+				throw new IllegalArgumentException("Father hat falsches Geschlecht!");
+			}
+		}
 	}
 	
 	public ArrayList<Person> getChildren() {
