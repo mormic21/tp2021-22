@@ -1,0 +1,4 @@
+Sepp;MALE;null;null
+Rosi;FEMALE;null;null
+Rudi;MALE;Rosi;Sepp
+Elsa;FEMALE;Rosi;Sepp
