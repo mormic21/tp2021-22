@@ -15,6 +15,7 @@ public class FindGUIMain {
 	public static void main(String[] args) {
 		//FindGUI
 		FindGUI fg = new FindGUI();
+		//set Visible
 		fg.setVisible(true);
 	}
 
