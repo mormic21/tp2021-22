@@ -246,113 +246,134 @@ public class CompressionGUI extends JFrame {
 	/**
 	 * CompressListener
 	 * Listener fuer compressb
+	 * Komprimiert das Bild schrittweise und gibt alle 300ms ein neues Bild an die GUI aus
+	 * Die ProgressBar zeigt an, wieviele Bilder bereits angezeigt wurden, 
+	 * im Verhaeltnis zu der Gesamtanzahl der Bilder
 	 * @author Michael Morandell
 	 *
 	 */
 	private class CompressListener implements ActionListener {
-
+		/**
+		 * action Performed
+		 * @param e, ActionEvent
+		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			//neuer Thread, welcher die GUI updatet
 			new Thread() {
+				/**
+				 * run-Methode des Threads
+				 */
 				@Override
 				public void run() {
 					//Wenn Bild gesetzt wurde
 					if (imgcomponent.getImage() != null) {
-						EventQueue.invokeLater(new Runnable() {
-							@Override
-							public void run() {
-								spinner.setEnabled(false);
-								openb.setEnabled(false);
-								compressb.setEnabled(false);
-								saveb.setEnabled(false);
-								bar.setValue(0);
-							}
-						});
+						//Buttons werden disabled
+						spinner.setEnabled(false);
+						openb.setEnabled(false);
+						compressb.setEnabled(false);
+						saveb.setEnabled(false);
+						//Progress-Bar wird auf den Startzustand -> 0 gesetzt
+						bar.setValue(0);
 						double quality = 1.0;
 						// Granulitaet wird aus dem JSpinner der GUI geholt
 						double granulitaet = Math.round((double) spinner.getValue() * 100.0) / 100.0;
 						// Berechnung der Anzahl der Bilder
 						int anzahlImg = (int) ((1 / granulitaet) + 1);
-						System.out.println(anzahlImg);
+						//Anzahl der Bilder wird als Maximum der ProgressBar gesetzt
 						bar.setMaximum(anzahlImg);
+						int offset0;
+						int offset1;
+						if (anzahlImg % 2 == 0) {
+							offset1 = 1;
+							offset0 = 0;
+						}
+						else {
+							offset0 = 1;
+							offset1 = 0;
+						}
+						//CompressionThread-Array, welches 2 CompressionThreads enthaelt
 						CompressionThread [] threads = new CompressionThread[2];
+						//aktuell, gesetztes Bild wird aus GUI geholt
 						BufferedImage aktImage = imgcomponent.getImage();
-						//int progress = 0;
-						int i = 0;
+						int i = -1;
+						//Solange bis alle Bilder komprimiert und angezeigt wurden
 						while(i < anzahlImg) {
-							System.out.println("i "+i+" q= "+quality);
-							if (i == 0) {
+							//beim Start der Schleife
+							if (i == -1) {
+								//Bild mit Qualitaet 1 wird in den Thread 0 geladen und komprimiert
 								quality = Math.round(quality * 100.0) / 100.0;
 								threads[0] = new CompressionThread(aktImage, quality);
 								threads[0].start();
 								// Qualitaet wird vermindert
-								i++;
 								quality -= granulitaet;
+								//Bild mit verminderter Qualitaet wird in den Thread 1 geladen und komprimiert
 								quality = Math.round(quality * 100.0) / 100.0;
 								threads[1] = new CompressionThread(aktImage, quality);
 								threads[1].start();
+								i = 0;
 							}
+							//nach dem ersten Schleifen-Durchlauf
 							else {
 								if (i % 2 == 0) {
+									// Qualitaet wird vermindert
 									quality -= granulitaet;
 									try {
+										//warten, dass Thread 1 sich beendet
 										threads[1].join();
+										//komprimiertes Bild wird an GUI ausgegeben
 										imgcomponent.setImage(threads[1].getCompressedImage());
+										i++;
 										quality = Math.round(quality * 100.0) / 100.0;
-										threads[1] = new CompressionThread(aktImage, quality);
-										threads[1].start();
+										//Bild mit verminderter Qualitaet wird in den Thread 1 geladen und komprimiert
+										if (i < anzahlImg-offset1) {
+											threads[1] = new CompressionThread(aktImage, quality);
+											threads[1].start();
+										}
 									} catch (InterruptedException e1) {
-										// TODO Auto-generated catch block
 										e1.printStackTrace();
 									}
 								}
 								else {
+									quality -= granulitaet;
 									try {
-										quality -= granulitaet;
+										//warten, dass Thread 0 sich beendet
 										threads[0].join();
+										//komprimiertes Bild wird an GUI ausgegeben
 										imgcomponent.setImage(threads[0].getCompressedImage());
+										i++;
 										quality = Math.round(quality * 100.0) / 100.0;
-										threads[0] = new CompressionThread(aktImage, quality);
-										threads[0].start();
+										//Bild mit verminderter Qualitaet wird in den Thread 0 geladen und komprimiert
+										if (i < anzahlImg-offset0) {
+											threads[0] = new CompressionThread(aktImage, quality);
+											threads[0].start();
+										}
 									} catch (InterruptedException e1) {
-										// TODO Auto-generated catch block
 										e1.printStackTrace();
 									}
 								}
 							}
-							i++;
-							final int barvalue = i;		
-							EventQueue.invokeLater(new Runnable() {
-								@Override
-								public void run() {
-									System.out.println("Progress: "+(barvalue/(double)anzahlImg)*100+"%");
-									bar.setValue(barvalue);
-								}
-							});					
+							//setzen der ProgressBar
+							bar.setValue(i);
+							//Es wird fuer 300ms gewartet
 							try {
-								Thread.sleep(100);
+								Thread.sleep(300);
 							} catch (InterruptedException err) {
-								// TODO Auto-generated catch block
 								err.printStackTrace();
 							}
 						}
-						EventQueue.invokeLater(new Runnable() {
-							@Override
-							public void run() {
-								//bar.setValue(anzahlImg);
-								spinner.setEnabled(true);
-								openb.setEnabled(true);
-								compressb.setEnabled(true);
-								saveb.setEnabled(true);
-							}
-						});						
+						//Buttons werden am Ende wieder enabled
+						spinner.setEnabled(true);
+						openb.setEnabled(true);
+						compressb.setEnabled(true);
+						saveb.setEnabled(true);					
 					}
 					else {
 						//Fehlermeldung, wenn kein Bild vorhanden
 						JOptionPane.showMessageDialog(CompressionGUI.this, "Bitte öffnen Sie zuerst ein Bild!");
 					}
 				}
+				//Thread wird gestartet
 			}.start();
 		}
 	}
