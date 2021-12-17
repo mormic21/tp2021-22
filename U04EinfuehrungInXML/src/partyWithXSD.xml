@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pty:party xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.tfobz.net/partySchema party.xsd"
+	xmlns:pty="http://www.tfobz.net/partySchema"
+	datum="31.12.14">
+    <pty:gast name="Franz Xaver">
+        <pty:getraenk>
+            Wein
+        </pty:getraenk>
+        <pty:getraenk>
+            Wasser
+        </pty:getraenk>
+        <pty:zustand ledig="false" nuechtern="false"/>
+    </pty:gast>
+    <pty:gast name="Thomas Tom">
+        <pty:getraenk>
+            Wasser
+        </pty:getraenk>
+        <pty:zustand ledig="true" nuechtern="false"/>
+    </pty:gast>
+    <pty:waechter name="Franz"/>
+</pty:party>

@@ -1,0 +1,44 @@
+<rss version="2.0">
+<channel>
+<title>Landeswetterdienst Südtirol</title>
+<link>http://www.provinz.bz.it/wetter/rss.asp</link>
+<description>Wetter in Südtirol</description>
+<language>de</language>
+<copyright>Landeswetterdienst</copyright>
+<category>Bergwetter</category>
+<category>Südtirol</category>
+<generator>SIAG</generator>
+<item>
+<guid isPermaLink="false">T072268</guid>
+<link>http://www.provinz.bz.it/wetter/suedtirol.asp?GUID=T072268</link>
+<category>Südtirol</category>
+<title>[Südtirol] Vorhersage für heute Freitag 03. Dezember 2021 : Viel Sonnenschein</title>
+<description><b>Allgemeine Wetterlage</b><br/>Ein Zwischenhoch sorgt zusammen mit einer nördlichen Anströmung für ruhiges Winterwetter.<br/><b>Vorhersage für heute</b><br/>Am Nachmittag bleibt es sonnig und wolkenlos. Erst gegen Abend ziehen Wolken auf, die im Laufe der Nacht dichter werden.<br/>Die Höchstwerte liegen zwischen -4° im Hochpustertal und +8° im Unterland.</description>
+<pubDate>Fri, 03 Dec 2021 11:03:21 GMT</pubDate>
+</item>
+<item>
+<guid isPermaLink="false">T172268</guid>
+<link>http://www.provinz.bz.it/wetter/suedtirol.asp?GUID=T172268</link>
+<category>Südtirol</category>
+<title>[Südtirol] Vorhersage für morgen Samstag 04. Dezember 2021 : Bewölkt</title>
+<description><b>Allgemeine Wetterlage</b><br/>Feuchte Luftmassen bestimmen das Wetter in Südtirol, bevor in der Nacht eine Kaltfront durchzieht.<br/><b>Vorhersage für morgen</b><br/>Die Wolken überwiegen, die Sonne scheint nur zwischendurch. Am Alpenhauptkamm, vor allem Richtung Reschen, kann es bereits tagsüber ab und zu leicht schneien. In der Nacht breiten sich die schwachen Schneefälle auf viele Landesteile aus.<br/>Die Höchstwerte liegen zwischen -1° in Toblach und +5° in Bozen.</description>
+<pubDate>Fri, 03 Dec 2021 11:03:21 GMT</pubDate>
+</item>
+<item>
+<guid isPermaLink="false">M072268</guid>
+<link>http://www.provinz.bz.it/wetter/bergwetter.asp?GUID=M072268</link>
+<category>Bergwetter</category>
+<title>[Bergwetter] Vorhersage für heute Freitag 03. Dezember 2021 : Viel Sonnenschein, kalt</title>
+<description><b>Allgemeine Wetterlage</b><br/>Ein Zwischenhoch sorgt zusammen mit einer nördlichen Anströmung für ruhiges Winterwetter.<br/><b>Bergwetter</b><br/>Ungetrübter Sonnenschein und ausgezeichnete Fernsicht. Allerdings weht kalter Nordwind.</description>
+<pubDate>Fri, 03 Dec 2021 11:03:21 GMT</pubDate>
+</item>
+<item>
+<guid isPermaLink="false">M172268</guid>
+<link>http://www.provinz.bz.it/wetter/bergwetter.asp?GUID=M172268</link>
+<category>Bergwetter</category>
+<title>[Bergwetter] Vorhersage für morgen Samstag 04. Dezember 2021 : Bewölkt, leichter Schneefall</title>
+<description><b>Allgemeine Wetterlage</b><br/>Feuchte Luftmassen bestimmen das Wetter in Südtirol, bevor in der Nacht eine Kaltfront durchzieht.<br/><b>Bergwetter</b><br/>Die Wolken überwiegen und vor allem am westlichen Alpenhauptkamm schneit es zeitweise leicht. In der Nacht verbreiteter Schneefall mit 5-20 cm Neuschnee.</description>
+<pubDate>Fri, 03 Dec 2021 11:03:21 GMT -------------------- DAS IST EIN TEST</pubDate>
+</item>
+</channel>
+</rss>

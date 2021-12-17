@@ -378,4 +378,3 @@ public class CompressionGUI extends JFrame {
 		}
 	}
 }
-
