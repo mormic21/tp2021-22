@@ -1,7 +1,7 @@
 package net.tfobz.simpleRssReader;
 
 /**
- * Erzeugt eine GUI vom Typ SimpleRssReader und setzt es Visible
+ * Erzeugt eine GUI vom Typ SimpleRssReader und setzt es visible
  * @author Michael Morandell
  *
  */
@@ -14,5 +14,4 @@ public class SimpleRssReaderMain {
 		SimpleRssReader srr = new SimpleRssReader();
 		srr.setVisible(true);
 	}
-
 }

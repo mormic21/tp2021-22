@@ -1,7 +1,5 @@
 package net.tfobz.simpleRssReader;
 
-import java.util.Date;
-
 public class Item
 {
 	protected String title = null;

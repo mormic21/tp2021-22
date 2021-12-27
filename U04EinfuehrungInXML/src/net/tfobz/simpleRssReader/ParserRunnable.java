@@ -1,22 +1,17 @@
 package net.tfobz.simpleRssReader;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.awt.TrayIcon;
+import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.concurrent.Callable;
+import javax.xml.stream.*;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-
-import net.tfobz.rssreader.Channel;
-import net.tfobz.rssreader.Item;
-
+/**
+ * ParserRunnable
+ * realisiert ein Runnable-Objekt welches einen Rss-Link einliest und diesen analysiert
+ * implementiert Runnable
+ * @author Michael Morandell
+ */
 public class ParserRunnable implements Runnable {
-
+	//Membervariablen
 	private URL link = null;
 	private boolean inItem = false;
 	private boolean end = false;
@@ -24,14 +19,15 @@ public class ParserRunnable implements Runnable {
 	private Item item = null;
 	
 	/**
-	 * ParserCallable
-	 * @param url
+	 * ParserCallable - Konstruktor
+	 * @param url, URL
 	 */
 	public ParserRunnable(URL url) {
 		this.link = url;
 	}
 
 	/**
+	 * getC
 	 * @return the c
 	 */
 	public Channel getC() {
@@ -39,38 +35,25 @@ public class ParserRunnable implements Runnable {
 	}
 
 	/**
-	 * @param c the c to set
-	 */
-	public void setC(Channel c) {
-		this.c = c;
-	}
-
-	/**
+	 * getItem
 	 * @return the item
 	 */
 	public Item getItem() {
 		return item;
 	}
-
+	
 	/**
-	 * @param item the item to set
+	 * run-Methode
 	 */
-	public void setItem(Item item) {
-		this.item = item;
-	}
-
-//	@Override
-//	public String call() throws Exception {
-//		
-//		return "ok";
-//	}
-
 	@Override
 	public void run() {
-		System.out.println("Parser: here");
+		//Link muss vorhanden sein
 		if (link != null) {
+			//Wenn es die erste URL in der Liste ist, erfolgt eine Status-Meldung an das Editor-Pane
 			if (this.link.equals(SimpleRssReader.getUrls().get(0))) {
-				SimpleRssReader.editor.setText(SimpleRssReader.editor.getText() + "\n" + "Message: Updating channels...");
+				String begin = SimpleRssReader.editor.getText().substring(0, SimpleRssReader.editor.getText().length()-19);
+				String end = SimpleRssReader.editor.getText().substring(SimpleRssReader.editor.getText().length()-19);
+				SimpleRssReader.editor.setText(begin + "<b>Message: </b>Updating channels... <br>" + end);
 			}
 			try {
 				XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -91,6 +74,7 @@ public class ParserRunnable implements Runnable {
 				String characters = "";
 				while (parser.hasNext()) {
 					int elementType = parser.next();
+					//Wenn Channel und das erste Item eingelesen wurde, wird der parser geschlossen 
 					if (end) {
 						elementType = XMLStreamConstants.END_DOCUMENT;
 					}
@@ -156,11 +140,7 @@ public class ParserRunnable implements Runnable {
 							}
 							// Item-End-Element
 							if (parser.getLocalName().equals("item")) {
-								// item wird geadded
-								// item = null;
 								end = true;
-								System.out.println("Parser: end");
-								//inItem = false;
 							}
 							characters = "";
 							break;
@@ -173,16 +153,28 @@ public class ParserRunnable implements Runnable {
 						}
 					}
 				}
+				//Membervariablen werden auf den Anfangszustand zurueckgesetzt
 				end = false;
 				inItem = false;
-				SimpleRssReader.editor.setText(SimpleRssReader.editor.getText() + "\n" + 
-						"Channel: " + c.getTitle() + " " +
-						"Newest item: " + item.getTitle() + " " +
-						"Date: "+ item.getPubDate());
-			} catch (XMLStreamException e) {}
+				//Ausgabe der Daten an das JEditorPane
+				String begin = SimpleRssReader.editor.getText().substring(0, SimpleRssReader.editor.getText().length()-19);
+				String end = SimpleRssReader.editor.getText().substring(SimpleRssReader.editor.getText().length()-19);
+				SimpleRssReader.editor.setText(begin+ "" +
+						"<b>Channel: </b>" + c.getTitle() + " " +
+						"<b>Newest item: </b>" + item.getTitle() + " " +
+						"<b>Date: </b>"+ item.getPubDate() + "<br>"+end);
+				//Wenn link das letzte Element in der Liste ist, wird eine Info-Message durch das Tray-Icon gezeigt
+				if (this.link.equals(SimpleRssReader.getUrls().get(SimpleRssReader.getUrls().size()-1))) {
+					SimpleRssReader.trayIcon.displayMessage("New Itmes", "There are new RSS Items", TrayIcon.MessageType.INFO);
+				}
+				//Fehler mit dem Parser werden aufgefangen
+			} catch (XMLStreamException e) {
+				e.printStackTrace();
+			}
 		}
+		//wenn URL null ist
 		else {
-			System.out.println("Keine url = null");
+			System.out.println("keine url (null)");
 		}
 	}
 }
