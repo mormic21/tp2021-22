@@ -1,4 +1,4 @@
-package net.tfobz.atomar;
+package net.tfobz.increment;
 /**
  * Instanziiert eine GUI vom Typ IncrementAtomicGUI und macht diese visible
  * @author Michael Morandell

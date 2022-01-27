@@ -1,4 +1,4 @@
-package net.tfobz.atomar;
+package net.tfobz.increment;
 /**
  * Int-Classe mit öffentlicher Membervariable int i
  * @author Michael Morandell

@@ -1,4 +1,4 @@
-package net.tfobz.atomar;
+package net.tfobz.incrementWithEventQuene;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.*;
@@ -8,6 +8,7 @@ import javax.swing.*;
  * IncrementAtomicGUI
  * realisiert eine GUI, welche darstellt ob i++ atomar ist
  * Es ist nicht atomar, da nur 99% erreicht werden und die Zahl der Variable i leicht unter 2mio bleibt
+ * VERSION MIT EVENTQUENES
  * extends JFrame
  * @author Michael Morandell
  *
@@ -27,7 +28,7 @@ public class IncrementAtomicGUI extends JFrame {
 	public IncrementAtomicGUI() {
 		//Exit on close
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setTitle("IncrementAtomic");
+		this.setTitle("IncrementAtomic MIT EVENTQUENES");
 		// Einstellen der Werte für das Fenster
 		int height = 300;
 		int width = 528;
@@ -90,6 +91,15 @@ public class IncrementAtomicGUI extends JFrame {
 			//starten der Threads
 			inc1.start();
 			inc2.start();
+
+
+			try {
+				inc1.join();
+				inc2.join();
+				System.out.println(intObject.i);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 }
