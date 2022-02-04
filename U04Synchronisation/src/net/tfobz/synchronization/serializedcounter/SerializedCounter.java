@@ -1,5 +1,4 @@
 package net.tfobz.synchronization.serializedcounter;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

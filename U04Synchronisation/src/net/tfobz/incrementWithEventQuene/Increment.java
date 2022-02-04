@@ -51,7 +51,8 @@ public class Increment extends Thread {
 								//Progressbar wird gesetzt
 								bar.setValue(intObject.i + 100000);
 							}
-						});
+						}
+				);
 				//JTextfield wird gesetzt
 				EventQueue.invokeLater(
 						new Runnable() {
@@ -59,7 +60,8 @@ public class Increment extends Thread {
 								//Textfeld wird gesetzt
 								text.setText(String.valueOf(intObject.i));
 							}
-						});
+						}
+				);
 			}
 		}
 	}

@@ -1,18 +1,27 @@
 package net.tfobz.synchronization.chat.server;
-
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class ChatServer
-{
-	public static final int PORT = 65535;
-	
+/**
+ * ChatServer
+ * realisiert einen Chat-Server
+ * @author Michael Morandell
+ *
+ */
+public class ChatServer {
+	//Port des Servers
+	public static final int PORT = 65534;
+	//Verbindungen zu Clients
 	protected static ArrayList<PrintStream> outputStreams =
 		new ArrayList();
 	
+	/**
+	 * Main
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		ServerSocket server = null;
 		try {

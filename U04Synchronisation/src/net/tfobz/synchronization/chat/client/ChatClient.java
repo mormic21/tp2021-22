@@ -1,5 +1,4 @@
 package net.tfobz.synchronization.chat.client;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,13 +6,16 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 /**
- * @author Michael
+ * @author Michael Wild
  * @see http://www.vorlesungen.uos.de/informatik/b06/
  */
-public class ChatClient
-{
-	public static final int PORT = 65535;
-	
+public class ChatClient {
+	//port zum server
+	public static final int PORT = 65534;
+	/**
+	 * Main
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		Socket client = null;
 		try {
