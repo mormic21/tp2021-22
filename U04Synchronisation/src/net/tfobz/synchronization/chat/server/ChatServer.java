@@ -15,8 +15,7 @@ public class ChatServer {
 	//Port des Servers
 	public static final int PORT = 65534;
 	//Verbindungen zu Clients
-	protected static ArrayList<PrintStream> outputStreams =
-		new ArrayList();
+	protected static ArrayList<PrintStream> outputStreams = new ArrayList();
 	
 	/**
 	 * Main

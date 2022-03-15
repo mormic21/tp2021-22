@@ -1,4 +1,4 @@
-package net.tfobz.DiningPhilosophersProblem;
+package net.tfobz.diningPhilosophersProblem;
 
 /**
  * Fork
@@ -27,12 +27,13 @@ public class Fork {
 	 */
 	public synchronized void get(Philosopher p) {
 		//wenn nicht verfügbar, wird gewartet
-		while (!available)
+		while (!available) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
 				;
 			}
+		}
 		available = false;
 		owner = p;
 		//ausgabe

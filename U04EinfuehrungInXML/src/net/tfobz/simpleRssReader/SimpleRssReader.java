@@ -185,7 +185,7 @@ public class SimpleRssReader extends JFrame {
 							String end = SimpleRssReader.editor.getText().substring(SimpleRssReader.editor.getText().length()-19);
 							editor.setText(begin + "<b>Message:</b> Scheduler is now running (schedule period = "+dialog.getSchedulePeriod()+"sec.) <br>" + end);
 							//neuer scheduled Executor
-							schedExecutor  =  Executors.newSingleThreadScheduledExecutor();
+							schedExecutor = Executors.newSingleThreadScheduledExecutor();
 							runnables = new ArrayList<>();
 							//benoetigte Runnables werden instanziiert und als scheduledTask zum Executor hinzugefuegt
 							for (int i = 0; i < urls.size(); i++) {

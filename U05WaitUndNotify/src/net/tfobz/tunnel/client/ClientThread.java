@@ -1,4 +1,9 @@
 package net.tfobz.tunnel.client;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.Socket;
 
 /**
  * Jede Anfrage um Start einer Besichtigung oder Beendigung einer solchen muss in 
@@ -20,8 +25,7 @@ package net.tfobz.tunnel.client;
  * Ist die Besucheranzahl gleich 0, so wird der Thread anweisen beim Server die 
  * Anzahl der verfügbaren Besucher nachzufragen, die noch im Tunnel Platz haben
  */
-public class ClientThread extends Thread
-{
+public class ClientThread extends Thread {
 	/**
 	 * IP-Adresse des Besucherservers
 	 */
@@ -58,8 +62,10 @@ public class ClientThread extends Thread
 	 * @param clientForm
 	 * @param guidesMonitor
 	 */
-	public ClientThread(int anzahl, ClientForm clientForm, 
-		GuidesMonitor guidesMonitor) {
+	public ClientThread(int anzahl, ClientForm clientForm, GuidesMonitor guidesMonitor) {
+		this.count = anzahl;
+		this.clientForm = clientForm;
+		this.guidesMonitor = guidesMonitor;
 	}
 	
 	/**
@@ -88,6 +94,92 @@ public class ClientThread extends Thread
 	 * ClientForm ausgegeben
 	 */
 	public void run() {
+		Socket client = null;
+		
+		//wenn positive Zahl übergeben wurde
+		if (count > 0) {
+			//guide wird geholt
+			guidesMonitor.request();
+			try {
+				//Verbindungsaufbau zum Server
+				client = new Socket(HOST, PORT);
+				//holen der Streams
+				BufferedReader in = new BufferedReader( new InputStreamReader(client.getInputStream()));
+				PrintStream out = new PrintStream(client.getOutputStream());
+				//Status ausgabe
+				clientForm.status_txtarea.append("Visit with "+count+" visitors requested...\n");
+				//Anfrage und Anwort zum Server
+				out.write(count);
+				int anzahl = (byte)in.read();
+				//Status ausgabe
+				clientForm.status_txtarea.append("Visit with "+count+" visitors enter the tunnel\n");
+				clientForm.listModel.addElement(Math.abs(anzahl)+" visitors");
+				//wenn Verbindungsfehler
+			} catch (IOException e) {
+				//Status ausgabe
+				clientForm.status_txtarea.append("Verbindungsfehler\n");
+				//guide wird zurueckgegeben
+				guidesMonitor.release();
+			} finally {
+				try { client.close(); } catch (Exception e) { ; }
+			}
+		}
+		
+		//wenn negative Zahl übergeben wurde
+		if (count < 0) {
+			//guide wird zurueckgegeben
+			guidesMonitor.release();
+			try {
+				//Verbindungsaufbau zum Server
+				client = new Socket(HOST, PORT);
+				//holen der Streams
+				BufferedReader in = new BufferedReader( new InputStreamReader(client.getInputStream()));
+				PrintStream out = new PrintStream(client.getOutputStream());
+				//Status ausgabe
+				clientForm.status_txtarea.append("Visit with "+count+" visitors finished\n");
+				//Anfrage und Anwort zum Server
+				out.write(count);
+				int anzahl = (byte)in.read();
+				//Updates an der JList
+				while (clientForm.listModel.elements().hasMoreElements()) {
+					String jListItem = clientForm.listModel.elements().nextElement();
+					String [] texte = jListItem.split(" ");
+					if (Integer.parseInt(texte[0]) == anzahl) {
+						clientForm.listModel.removeElement(jListItem);
+						break;
+					}
+				}
+				//wenn Verbindungsfehler
+			} catch (IOException e) {
+				behandleException(e);
+			} finally {
+				try { client.close(); } catch (Exception e) { ; }
+			}
+		}
+		
+		//wenn 0 übergeben wurde
+		if (count == 0) {
+			try {
+				//Verbindungsaufbau zum Server
+				client = new Socket(HOST, PORT);
+				//holen der Streams
+				BufferedReader in = new BufferedReader( new InputStreamReader(client.getInputStream()));
+				PrintStream out = new PrintStream(client.getOutputStream());
+				//Anfrage und Anwort zum Server
+				out.write(count);
+				int anzahl = (byte)in.read();
+				//Updating the label in clientform
+				String labeltext = clientForm.available_visitors_label.getText();
+				String []texte = labeltext.split(" ");
+				String newtext = texte[0] + " " + anzahl;
+				clientForm.available_visitors_label.setText(newtext);
+				//wenn Verbindungsfehler
+			} catch (IOException e) {
+				behandleException(e);
+			} finally {
+				try { client.close(); } catch (Exception e) { ; }
+			}
+		}
 	}
 
 	/**
@@ -95,5 +187,6 @@ public class ClientThread extends Thread
 	 * @param e
 	 */
 	public void behandleException(Exception e) {
+		e.printStackTrace();
 	}
 }

@@ -1,4 +1,4 @@
-package net.tfobz.DiningPhilosophersProblem;
+package net.tfobz.diningPhilosophersProblem;
 
 /**
  * ForkControl

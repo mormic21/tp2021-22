@@ -1,9 +1,15 @@
 package net.tfobz.tunnel.client;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 
 /**
  * Diese Klasse erstellt die Benutzerschnittstelle und den GuidesMonitor zur 
@@ -40,20 +46,19 @@ public class ClientForm extends JFrame {
 	protected DefaultListModel<String> mActiveVisits = null;
 	
 	//JFrame-Variables
-	private JPanel avaiable;
+	private JPanel available;
 	private JPanel active;
 	private JPanel visitors;
 	private JLabel title_label;
-	private JLabel guides_label;
+	public JLabel guides_label;
 	private JLabel visitors_label;
 	private JLabel visits_label;
-	private JLabel avaible_visitors_label;
+	public JLabel available_visitors_label;
 	private JLabel status_label;
 	private JButton request_button;
 	private JButton finish_button;
 	private JTextField visitors_text;
-	private JTextArea visits_txtarea;
-	private JTextArea status_txtarea;
+	public JTextArea status_txtarea;
 	private JScrollPane status_scrollp;
 	//Fonts
 	private Font bold_font = new Font("Sans Serif", Font.BOLD, 17);
@@ -62,19 +67,26 @@ public class ClientForm extends JFrame {
 	//Border
 	private Border loweredBevelBorder = BorderFactory.createLoweredBevelBorder();
 	//Buttonlistener
-	ButtonListener buttonlistener = new ButtonListener();
+	private ButtonListener buttonlistener = new ButtonListener();
+	//ListModel fuer auswaehlbare strings in JList
+	public DefaultListModel<String> listModel;
+	//JList
+	public JList<String> visitors_list;
+	//Scheduled Executor
+	private ScheduledExecutorService schedExecutor;
 	
 	/**
 	 * ClientForm-Konstruktor
+	 * @param title, String, the title of the gui window
 	 */
-	public ClientForm() {
+	public ClientForm(String title) {
 		//GuidesMonitor angelegt
 		this.guidesMonitor = new GuidesMonitor(this);
 		
 		//JFrame
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setTitle("Entrance 1");
-		int height = 600;
+		this.setTitle(title);
+		int height = 595;
 		int width = 550;
 		this.setBounds((Toolkit.getDefaultToolkit().getScreenSize().width - width) / 2, 
 				(Toolkit.getDefaultToolkit().getScreenSize().height - height) / 2,
@@ -91,31 +103,31 @@ public class ClientForm extends JFrame {
 		this.getContentPane().add(title_label);
 	  
 		//avaiable panel
-		avaiable = new JPanel();
-		avaiable.setBounds(10, 55, 180, 130);
-		avaiable.setBorder(loweredBevelBorder);
-		avaiable.setLayout(null);
-		this.getContentPane().add(avaiable);
+		available = new JPanel();
+		available.setBounds(10, 55, 180, 130);
+		available.setBorder(loweredBevelBorder);
+		available.setLayout(null);
+		this.getContentPane().add(available);
 		
 		//guides label
 		guides_label = new JLabel();
-		guides_label.setText("Avaiable guides: 2");
+		guides_label.setText("Available guides: 4");
 		guides_label.setFont(bold_font);
 		guides_label.setBounds(10, 10, 160, 20);
-		avaiable.add(guides_label);
+		available.add(guides_label);
 		
 		//visitors label
 		visitors_label = new JLabel();
 		visitors_label.setText("Visitors:");
 		visitors_label.setFont(bold_font);
 		visitors_label.setBounds(10, 40, 66, 20);
-		avaiable.add(visitors_label);
+		available.add(visitors_label);
 		
 		//visitor textfield
 		visitors_text = new JTextField();
 		visitors_text.setFont(default_font);
 		visitors_text.setBounds(90, 40, 74, 22);
-		avaiable.add(visitors_text);
+		available.add(visitors_text);
 		
 		//request button
 		request_button = new JButton();
@@ -123,17 +135,76 @@ public class ClientForm extends JFrame {
 		request_button.setText("Request visit");
 		request_button.setBounds(10, 80, 160, 40);
 		request_button.addActionListener(buttonlistener);
-		avaiable.add(request_button);
+		available.add(request_button);
 		
 		//visits panel
 		active = new JPanel();
-		active.setBounds(10, 200, 180, 200);
+		active.setBounds(10, 200, 180, 250);
 		active.setBorder(loweredBevelBorder);
 		active.setLayout(null);
 		this.getContentPane().add(active);
 		
+		//visits label
+		visits_label = new JLabel();
+		visits_label.setFont(bold_font);
+		visits_label.setText("Active visits:");
+		visits_label.setBounds(10, 10, 160, 20);
+		active.add(visits_label);
+		
+		//ListModel mit auswaehlbaren Strings für JList
+		listModel = new DefaultListModel<String>();
+		
+		//visitors_list
+		visitors_list = new JList<String>(listModel);
+		visitors_list.setFont(bold_font);
+		visitors_list.setBounds(10, 40, 160, 150);
+		active.add(visitors_list);
+		
+		//finish button
+		finish_button = new JButton();
+		finish_button.setFont(bold_font);
+		finish_button.setText("Finish visit");
+		finish_button.setBounds(10, 200, 160, 40);
+		finish_button.addActionListener(buttonlistener);
+		active.add(finish_button);
+		
+		//avaiable visitors label 
+		available_visitors_label = new JLabel();
+		available_visitors_label.setFont(bold_font);
+		available_visitors_label.setText("Available Visitors: 50");
+		available_visitors_label.setBounds(20, 460, 180, 20);
+		this.getContentPane().add(available_visitors_label);
+		
+		//JPanel visitors
+		visitors = new JPanel();
+		visitors.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		visitors.setBounds(10, 490, 180, 60);
+		this.getContentPane().add(visitors);
+		
+		//textlabel
+		status_label = new JLabel();
+		status_label.setFont(bold_font);
+		status_label.setText("Status:");
+		status_label.setBounds(205, 27, 80, 20);
+		this.getContentPane().add(status_label);
+		
+		//textarea
+		status_txtarea = new JTextArea();
+		status_txtarea.setFont(default_font);
+		status_txtarea.setEditable(false);
+		
+		//scrollpane
+		status_scrollp = new JScrollPane(status_txtarea);
+		status_scrollp.setBounds(205, 55, 328, 495);
+		this.getContentPane().add(status_scrollp);
+		
 		//defaultButton
 		this.getRootPane().setDefaultButton(request_button);
+	
+		//update der Besucheranzahl
+		schedExecutor = Executors.newSingleThreadScheduledExecutor();
+		Thread t = new ClientThread(0, ClientForm.this, guidesMonitor);
+		schedExecutor.scheduleAtFixedRate((Runnable)t, 1, 1, TimeUnit.SECONDS);
 	}
 	
 	/**
@@ -149,15 +220,38 @@ public class ClientForm extends JFrame {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			//request button
 			if (e.getSource().equals(request_button)) {
-				System.out.println("request_button");
+				try {
+					//anzahl wird von Textfeld geholt
+					int anzahl = Integer.parseInt(visitors_text.getText());
+					//Thread wird erstellt
+					Thread t = new ClientThread(anzahl, ClientForm.this, guidesMonitor);
+					//Thread der EventQuene übergeben
+					EventQueue.invokeLater((Runnable)t);
+					//leeren des Textfeldes
+					visitors_text.setText("");
+				} catch (Exception err) {
+					System.out.println("Ungültige Eingabe!");
+				}
+				
 			}
+			//finish button
 			if (e.getSource().equals(finish_button)) {
-				System.out.println("finish_button");
+				try {
+					//anzahl wird von Textfeld geholt
+					int anzahl = Integer.parseInt(visitors_text.getText());
+					//Thread wird erstellt
+					Thread t = new ClientThread(-anzahl, ClientForm.this, guidesMonitor);
+					//Thread der EventQuene übergeben
+					EventQueue.invokeLater((Runnable)t);
+					//leeren des Textfeldes
+					visitors_text.setText("");
+				} catch (Exception err) {
+					System.out.println("Ungültige Eingabe!");
+				}
 			}
-			
 		}
-		
 	}
 
 	/**
@@ -170,8 +264,9 @@ public class ClientForm extends JFrame {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		ClientForm gui = new ClientForm();
-		gui.setVisible(true);
+		ClientForm entrance1 = new ClientForm("Entrance 1");
+		entrance1.setVisible(true);
+		ClientForm entrance2 = new ClientForm("Entrance 2");
+		entrance2.setVisible(true);
 	}
-	
 }

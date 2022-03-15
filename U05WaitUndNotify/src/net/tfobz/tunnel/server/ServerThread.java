@@ -1,5 +1,8 @@
 package net.tfobz.tunnel.server;
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.Socket;
 
 /**
@@ -9,12 +12,17 @@ import java.net.Socket;
  * zurück geschickt. der ServerThread erhält den Socket des Clients und eine 
  * Referenz auf VisitorsMonitor
  */
-public class ServerThread extends Thread
-{
+public class ServerThread extends Thread {
+	
 	/**
 	 * Der Clientsocket von welchem die Besucheranzahl gelesen werden kann
 	 */
 	protected Socket client = null;
+	
+	//Input - Output Streams
+	private BufferedReader instr = null;
+	private PrintStream outstr = null;
+	
 	/**
 	 * VisitorsMonitor an dem die Anfrage nach Besuchern bzw. die Rückgabe
 	 * der Besucher nach Beendigung einer Besichtigung gestellt werden kann
@@ -29,7 +37,15 @@ public class ServerThread extends Thread
 	 * @param client
 	 * @param visitorsMonitor
 	 */
-	public ServerThread(Socket client, VisitorsMonitor visitorsMonitor) {
+	public ServerThread(Socket client, VisitorsMonitor visitorsMonitor) throws IOException {
+		this.client = client;
+		//streams werden geholt
+		this.instr = new BufferedReader(new InputStreamReader(client.getInputStream()));
+		this.outstr = new PrintStream(client.getOutputStream());
+		//visitors Monitor wird erstellt
+		this.visitorsMonitor = visitorsMonitor;
+		//ip addresse wird als name gesetzt
+		this.setName(client.getInetAddress().toString());
 	}
 	
 	/**
@@ -43,6 +59,28 @@ public class ServerThread extends Thread
 	 * <b>anzahl < 0</b><br>
 	 * Es werden dem VisitorsMonitor die Anzahl an Benutzer zurück gegeben
 	 */
-	public void run() {
+	public void run() {		
+		try {
+			//anzahl wird vom stream gelesen
+			int anzahl = (byte)instr.read();
+			//Es wird die Anzahl der am VisitorsMonitor momentan verfügbaren Benutzer
+			if (anzahl == 0) {
+				outstr.write(visitorsMonitor.getAvailableVisitors());
+			}
+			//Es werden am VisitorsMonitor die Benutzer angefordert
+			if (anzahl > 0) {
+				visitorsMonitor.request(anzahl);
+				outstr.write(anzahl);
+			}
+			//Es werden dem VisitorsMonitor die Anzahl an Benutzer zurück gegeben
+			if (anzahl < 0) {
+				visitorsMonitor.release(anzahl);
+				outstr.write(anzahl);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try { client.close(); } catch (IOException e) { ; }
+		}
 	}
 }
