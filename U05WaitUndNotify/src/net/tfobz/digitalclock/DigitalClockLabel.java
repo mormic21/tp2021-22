@@ -55,7 +55,6 @@ public class DigitalClockLabel extends JLabel implements Runnable {
 					try {
 						this.wait();
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}

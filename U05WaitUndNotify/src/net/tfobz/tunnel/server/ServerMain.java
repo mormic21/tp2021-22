@@ -33,7 +33,7 @@ public class ServerMain {
 			server = new ServerSocket(PORT);
 			//Initiale ausgabe
 			System.out.println("S E R V E R");
-			System.out.println("===========");
+			System.out.println("==============");
 			//Ausgabe der besucher
 			System.out.println(visitorMonitor.getAvailableVisitors()+" available visitors");
 			//endlos-schleife

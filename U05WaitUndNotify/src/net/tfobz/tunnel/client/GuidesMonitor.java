@@ -45,10 +45,13 @@ public class GuidesMonitor {
 				e.printStackTrace();
 			}
 		}
-		availableGuides--;
-		//Statusmeldungen im ClientForm
-		clientForm.status_txtarea.append("Guide reserved. "+availableGuides+" guides now available\n");
-		updateClientform();
+		if (availableGuides - 1 >= 0) {
+			availableGuides--;
+			//Statusmeldungen im ClientForm
+			clientForm.status_txtarea.append("Guide reserved. "+availableGuides+" guides now available\n");
+			updateClientform();
+		}
+		
 	}
 	
 	/**
@@ -56,11 +59,13 @@ public class GuidesMonitor {
 	 * werden ausgegeben und die Benutzerschnittstelle angepasst
 	 */
 	public synchronized void release() {
-		availableGuides++;
-		//Statusmeldungen im ClientForm
-		clientForm.status_txtarea.append("Guide released. "+availableGuides+" guides now available\n");
-		updateClientform();
-		notifyAll();
+		if (availableGuides + 1 <= 4) {
+			availableGuides++;
+			//Statusmeldungen im ClientForm
+			clientForm.status_txtarea.append("Guide released. "+availableGuides+" guides now available\n");
+			updateClientform();
+			notifyAll();
+		}
 	}
 
 	/**

@@ -1,15 +1,14 @@
 package net.tfobz.tunnel.client;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
+import javax.swing.text.*;
 
 /**
  * Diese Klasse erstellt die Benutzerschnittstelle und den GuidesMonitor zur 
@@ -135,6 +134,7 @@ public class ClientForm extends JFrame {
 		request_button.setText("Request visit");
 		request_button.setBounds(10, 80, 160, 40);
 		request_button.addActionListener(buttonlistener);
+		request_button.setMnemonic(KeyEvent.VK_Q);
 		available.add(request_button);
 		
 		//visits panel
@@ -166,6 +166,7 @@ public class ClientForm extends JFrame {
 		finish_button.setText("Finish visit");
 		finish_button.setBounds(10, 200, 160, 40);
 		finish_button.addActionListener(buttonlistener);
+		finish_button.setMnemonic(KeyEvent.VK_F);
 		active.add(finish_button);
 		
 		//avaiable visitors label 
@@ -190,11 +191,22 @@ public class ClientForm extends JFrame {
 		
 		//textarea
 		status_txtarea = new JTextArea();
-		status_txtarea.setFont(default_font);
+		//automatische newline, wenn text zu lang
+		status_txtarea.setLineWrap(true);
+		status_txtarea.setWrapStyleWord(false);
 		status_txtarea.setEditable(false);
+		//scrollt immer ans Ende
+		DefaultCaret caret = (DefaultCaret)status_txtarea.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		//Font
+		status_txtarea.setFont(default_font);
 		
 		//scrollpane
 		status_scrollp = new JScrollPane(status_txtarea);
+		//vertikale scorllbar, wenn nötig
+		status_scrollp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		//horinzontale scrollbar nie
+		status_scrollp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		status_scrollp.setBounds(205, 55, 328, 495);
 		this.getContentPane().add(status_scrollp);
 		
@@ -228,7 +240,8 @@ public class ClientForm extends JFrame {
 					//Thread wird erstellt
 					Thread t = new ClientThread(anzahl, ClientForm.this, guidesMonitor);
 					//Thread der EventQuene übergeben
-					EventQueue.invokeLater((Runnable)t);
+					t.start();
+					//EventQueue.invokeLater((Runnable)t);
 					//leeren des Textfeldes
 					visitors_text.setText("");
 				} catch (Exception err) {
@@ -239,16 +252,19 @@ public class ClientForm extends JFrame {
 			//finish button
 			if (e.getSource().equals(finish_button)) {
 				try {
-					//anzahl wird von Textfeld geholt
-					int anzahl = Integer.parseInt(visitors_text.getText());
+					//holt selected value
+					String [] strings = visitors_list.getSelectedValue().split(" ");
+					//anzahl wird geholt
+					int anzahl = Integer.parseInt(strings[0]);
 					//Thread wird erstellt
 					Thread t = new ClientThread(-anzahl, ClientForm.this, guidesMonitor);
 					//Thread der EventQuene übergeben
-					EventQueue.invokeLater((Runnable)t);
+					t.start();
+					//EventQueue.invokeLater((Runnable)t);
 					//leeren des Textfeldes
 					visitors_text.setText("");
 				} catch (Exception err) {
-					System.out.println("Ungültige Eingabe!");
+					System.out.println("Bitte wählen sie eine aktive visit aus!");
 				}
 			}
 		}

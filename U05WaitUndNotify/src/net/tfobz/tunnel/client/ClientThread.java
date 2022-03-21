@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.Enumeration;
+
+import javax.sound.midi.Soundbank;
 
 /**
  * Jede Anfrage um Start einer Besichtigung oder Beendigung einer solchen muss in 
@@ -113,7 +116,14 @@ public class ClientThread extends Thread {
 				int anzahl = (byte)in.read();
 				//Status ausgabe
 				clientForm.status_txtarea.append("Visit with "+count+" visitors enter the tunnel\n");
-				clientForm.listModel.addElement(Math.abs(anzahl)+" visitors");
+				synchronized (clientForm.listModel) {
+					if (anzahl == 1) {
+						clientForm.listModel.addElement(anzahl+" visitor");
+					}
+					else {
+						clientForm.listModel.addElement(anzahl+" visitors");
+					}
+				}
 				//wenn Verbindungsfehler
 			} catch (IOException e) {
 				//Status ausgabe
@@ -136,16 +146,26 @@ public class ClientThread extends Thread {
 				BufferedReader in = new BufferedReader( new InputStreamReader(client.getInputStream()));
 				PrintStream out = new PrintStream(client.getOutputStream());
 				//Status ausgabe
-				clientForm.status_txtarea.append("Visit with "+count+" visitors finished\n");
+				clientForm.status_txtarea.append("Visit with "+Math.abs(count)+" visitors finished\n");
 				//Anfrage und Anwort zum Server
 				out.write(count);
 				int anzahl = (byte)in.read();
+				anzahl = Math.abs(anzahl);
+				
 				//Updates an der JList
-				while (clientForm.listModel.elements().hasMoreElements()) {
-					String jListItem = clientForm.listModel.elements().nextElement();
+				
+				//Iterator wird geholt
+				Enumeration<String> jListIterator = clientForm.listModel.elements();
+				while (jListIterator.hasMoreElements()) {
+					String jListItem = jListIterator.nextElement();
 					String [] texte = jListItem.split(" ");
+					//Wenn das element das zu entfernende Element ist
 					if (Integer.parseInt(texte[0]) == anzahl) {
-						clientForm.listModel.removeElement(jListItem);
+						//List item wird entfernt
+						synchronized (clientForm.listModel) {
+							clientForm.listModel.removeElement(jListItem);
+						}
+						//Schleife wird abgebrochen, da richtiges Element gefunden wurde
 						break;
 					}
 				}
@@ -171,7 +191,7 @@ public class ClientThread extends Thread {
 				//Updating the label in clientform
 				String labeltext = clientForm.available_visitors_label.getText();
 				String []texte = labeltext.split(" ");
-				String newtext = texte[0] + " " + anzahl;
+				String newtext = texte[0]+" "+texte[1]+" "+anzahl;
 				clientForm.available_visitors_label.setText(newtext);
 				//wenn Verbindungsfehler
 			} catch (IOException e) {

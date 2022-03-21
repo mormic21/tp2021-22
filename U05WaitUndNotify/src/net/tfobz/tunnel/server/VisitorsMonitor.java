@@ -30,9 +30,12 @@ public class VisitorsMonitor {
 				e.printStackTrace();
 			}
 		}
-		availableVisitors = availableVisitors - count;
-		//Statusmeldung an die Serverkonsole
-		System.out.println(Thread.currentThread().getName()+" receives "+count+" visitors. "+availableVisitors+" visitors available");
+		if (!(availableVisitors-count < 0)) {
+			availableVisitors = availableVisitors - count;
+			//Statusmeldung an die Serverkonsole
+			System.out.println(Thread.currentThread().getName()+" receives "+count+" visitors. "+availableVisitors+" visitors available");
+		}
+		
 	}
 	
 	/**
@@ -41,10 +44,12 @@ public class VisitorsMonitor {
 	 * @param count
 	 */
 	public synchronized void release(int count) {
-		availableVisitors = availableVisitors + count;
-		//Statusmeldung an Serverkonsole
-		System.out.println(Thread.currentThread().getName()+" releases "+Math.abs(count)+" visitors. "+availableVisitors+" visitors available");
-		notifyAll();
+		if (!(availableVisitors-count > 50)) {
+			availableVisitors = availableVisitors - count;
+			//Statusmeldung an Serverkonsole
+			System.out.println(Thread.currentThread().getName()+" releases "+Math.abs(count)+" visitors. "+availableVisitors+" visitors available");
+			notifyAll();
+		}
 	}
 	
 	/**
