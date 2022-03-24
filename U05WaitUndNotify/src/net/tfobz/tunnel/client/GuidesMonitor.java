@@ -48,7 +48,7 @@ public class GuidesMonitor {
 		if (availableGuides - 1 >= 0) {
 			availableGuides--;
 			//Statusmeldungen im ClientForm
-			clientForm.status_txtarea.append("Guide reserved. "+availableGuides+" guides now available\n");
+			clientForm.status_txtarea.append("Guide reserved. "+getGuidesString(getAvailableGuides())+" now available\n");
 			updateClientform();
 		}
 		
@@ -62,7 +62,7 @@ public class GuidesMonitor {
 		if (availableGuides + 1 <= 4) {
 			availableGuides++;
 			//Statusmeldungen im ClientForm
-			clientForm.status_txtarea.append("Guide released. "+availableGuides+" guides now available\n");
+			clientForm.status_txtarea.append("Guide released. "+getGuidesString(getAvailableGuides())+" now available\n");
 			updateClientform();
 			notifyAll();
 		}
@@ -85,5 +85,20 @@ public class GuidesMonitor {
 		String []texte = labeltext.split(" ");
 		String newtext = texte[0] + " " + this.getAvailableGuides();
 		clientForm.guides_label.setText(newtext);
+	}
+	
+	/**
+	 * getGuidesString
+	 * gibt Einzahl oder Mehrzahl zurueck
+	 * @param numberOfGuides
+	 * @return "guide" or "guides"
+	 */
+	private String getGuidesString(int numberOfGuides) {
+		numberOfGuides = Math.abs(numberOfGuides);
+		String ret = String.valueOf(numberOfGuides) + " guide";
+		if (numberOfGuides > 1) {
+			ret = ret + "s";
+		}
+		return ret;
 	}
 }
