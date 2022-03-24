@@ -51,7 +51,6 @@ public class GuidesMonitor {
 			clientForm.status_txtarea.append("Guide reserved. "+getGuidesString(getAvailableGuides())+" now available\n");
 			updateClientform();
 		}
-		
 	}
 	
 	/**
@@ -83,7 +82,7 @@ public class GuidesMonitor {
 	private void updateClientform() {
 		String labeltext = clientForm.guides_label.getText();
 		String []texte = labeltext.split(" ");
-		String newtext = texte[0] + " " + this.getAvailableGuides();
+		String newtext = texte[0]+" "+texte[1]+" "+ this.getAvailableGuides();
 		clientForm.guides_label.setText(newtext);
 	}
 	

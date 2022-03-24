@@ -34,8 +34,7 @@ public class VisitorsMonitor {
 			availableVisitors = availableVisitors - count;
 			//Statusmeldung an die Serverkonsole
 			System.out.println(Thread.currentThread().getName()+" receives "+getVisitorString(count)+". "+getVisitorString(getAvailableVisitors())+" available");
-		}
-		
+		}	
 	}
 	
 	/**

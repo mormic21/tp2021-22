@@ -1,12 +1,7 @@
 package net.tfobz.tunnel.client;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.Enumeration;
-
-import javax.sound.midi.Soundbank;
 
 /**
  * Jede Anfrage um Start einer Besichtigung oder Beendigung einer solchen muss in 
@@ -97,6 +92,7 @@ public class ClientThread extends Thread {
 	 * ClientForm ausgegeben
 	 */
 	public void run() {
+		//Client-Socket wird erstellt
 		Socket client = null;
 		
 		//wenn positive Zahl übergeben wurde
@@ -115,15 +111,9 @@ public class ClientThread extends Thread {
 				out.write(count);
 				int anzahl = (byte)in.read();
 				//Status ausgabe
-				clientForm.status_txtarea.append("Visit with "+getVisitorString(count)+" enter the tunnel\n");
+				clientForm.status_txtarea.append("Visit with "+getVisitorString(anzahl)+" enter the tunnel\n");
 				synchronized (clientForm.listModel) {
-					clientForm.listModel.addElement(getVisitorString(count));
-//					if (anzahl == 1) {
-//						clientForm.listModel.addElement(anzahl+" visitor");
-//					}
-//					else {
-//						clientForm.listModel.addElement(anzahl+" visitors");
-//					}
+					clientForm.listModel.addElement(getVisitorString(anzahl));
 				}
 				//wenn Verbindungsfehler
 			} catch (IOException e) {
@@ -166,7 +156,7 @@ public class ClientThread extends Thread {
 						synchronized (clientForm.listModel) {
 							clientForm.listModel.removeElement(jListItem);
 						}
-						//Schleife wird abgebrochen, da richtiges Element gefunden wurde
+						//Schleife wird abgebrochen, da richtiges Element entfernt wurde
 						break;
 					}
 				}
@@ -208,7 +198,7 @@ public class ClientThread extends Thread {
 	 * @param e
 	 */
 	public void behandleException(Exception e) {
-		e.printStackTrace();
+		System.out.println(e.getClass().getName()+" in ClientThread.java | "+e.getMessage());
 	}
 	
 	/**

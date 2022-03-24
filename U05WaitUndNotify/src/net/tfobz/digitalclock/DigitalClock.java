@@ -11,6 +11,7 @@ import javax.swing.*;
  * @author Michael Morandell
  *
  */
+@SuppressWarnings("serial")
 public class DigitalClock extends JFrame {
 	//Membervariablen
 	DigitalClockLabel dgl = null;

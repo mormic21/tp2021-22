@@ -11,6 +11,7 @@ import javax.swing.JLabel;
  * @author Michael Morandell
  *
  */
+@SuppressWarnings("serial")
 public class DigitalClockLabel extends JLabel implements Runnable {
 	//Membervariable
 	private boolean stopped = false;

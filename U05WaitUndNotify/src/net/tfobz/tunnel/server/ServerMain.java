@@ -1,7 +1,6 @@
 package net.tfobz.tunnel.server;
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 
 /**
  * In dieser Konsolenanwendung wird zuerst ein VisitorsMonitor angelegt, und dann 
@@ -56,6 +55,6 @@ public class ServerMain {
 	 * @param e
 	 */
 	public static void behandleException(Exception e) {
-		e.printStackTrace();
+		System.out.println(e.getClass().getName()+" in ClientThread.java | "+e.getMessage());
 	}
 }

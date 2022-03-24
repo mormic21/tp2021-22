@@ -1,13 +1,9 @@
 package net.tfobz.tunnel.client;
-import java.awt.Font;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EtchedBorder;
+import javax.swing.border.*;
 import javax.swing.text.*;
 
 /**
@@ -33,6 +29,7 @@ import javax.swing.text.*;
  * Anzahl und Referenzen auf ClientForm und GuidesMonitor 
  * übergeben werden
  */
+@SuppressWarnings("serial")
 public class ClientForm extends JFrame {
 
 	/**
@@ -88,8 +85,7 @@ public class ClientForm extends JFrame {
 		int height = 595;
 		int width = 550;
 		this.setBounds((Toolkit.getDefaultToolkit().getScreenSize().width - width) / 2, 
-				(Toolkit.getDefaultToolkit().getScreenSize().height - height) / 2,
-						width, height);
+				(Toolkit.getDefaultToolkit().getScreenSize().height - height) / 2, width, height);
 		this.setResizable(false);
 		//Layoutmgr null
 		this.getContentPane().setLayout(null);
