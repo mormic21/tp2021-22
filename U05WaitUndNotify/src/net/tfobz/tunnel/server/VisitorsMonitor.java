@@ -21,7 +21,7 @@ public class VisitorsMonitor {
 	 */
 	public synchronized void request(int count) {
 		//Statusmeldung an die Serverkonsole
-		System.out.println(Thread.currentThread().getName()+" requests "+count+" visitors");
+		System.out.println(Thread.currentThread().getName()+" requests "+getVisitorString(count));
 		//solange so viele Benutzer nicht verfuegbar sind, wird gewartet
 		while (availableVisitors-count < 0) {
 			try {
@@ -33,7 +33,7 @@ public class VisitorsMonitor {
 		if (!(availableVisitors-count < 0)) {
 			availableVisitors = availableVisitors - count;
 			//Statusmeldung an die Serverkonsole
-			System.out.println(Thread.currentThread().getName()+" receives "+count+" visitors. "+availableVisitors+" visitors available");
+			System.out.println(Thread.currentThread().getName()+" receives "+getVisitorString(count)+". "+availableVisitors+" visitors available");
 		}
 		
 	}
@@ -47,7 +47,7 @@ public class VisitorsMonitor {
 		if (!(availableVisitors-count > 50)) {
 			availableVisitors = availableVisitors - count;
 			//Statusmeldung an Serverkonsole
-			System.out.println(Thread.currentThread().getName()+" releases "+Math.abs(count)+" visitors. "+availableVisitors+" visitors available");
+			System.out.println(Thread.currentThread().getName()+" releases "+getVisitorString(count)+". "+availableVisitors+" visitors available");
 			notifyAll();
 		}
 	}
@@ -59,5 +59,20 @@ public class VisitorsMonitor {
 	 */
 	public synchronized int getAvailableVisitors() {
 		return this.availableVisitors;
+	}
+	
+	/**
+	 * getVisitor String
+	 * gibt Einzahl oder Mehrzahl zurueck
+	 * @param numberOfVisitors
+	 * @return "visitor" or "visitors"
+	 */
+	private String getVisitorString(int numberOfVisitors) {
+		numberOfVisitors = Math.abs(numberOfVisitors);
+		String ret = String.valueOf(numberOfVisitors) + " visitor";
+		if (numberOfVisitors > 1) {
+			ret = ret + "s";
+		}
+		return ret;
 	}
 }
