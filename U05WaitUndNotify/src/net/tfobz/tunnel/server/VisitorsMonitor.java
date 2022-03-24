@@ -33,7 +33,7 @@ public class VisitorsMonitor {
 		if (!(availableVisitors-count < 0)) {
 			availableVisitors = availableVisitors - count;
 			//Statusmeldung an die Serverkonsole
-			System.out.println(Thread.currentThread().getName()+" receives "+getVisitorString(count)+". "+availableVisitors+" visitors available");
+			System.out.println(Thread.currentThread().getName()+" receives "+getVisitorString(count)+". "+getVisitorString(getAvailableVisitors())+" available");
 		}
 		
 	}
@@ -47,7 +47,7 @@ public class VisitorsMonitor {
 		if (!(availableVisitors-count > 50)) {
 			availableVisitors = availableVisitors - count;
 			//Statusmeldung an Serverkonsole
-			System.out.println(Thread.currentThread().getName()+" releases "+getVisitorString(count)+". "+availableVisitors+" visitors available");
+			System.out.println(Thread.currentThread().getName()+" releases "+getVisitorString(count)+". "+getVisitorString(getAvailableVisitors())+" available");
 			notifyAll();
 		}
 	}
@@ -70,7 +70,7 @@ public class VisitorsMonitor {
 	private String getVisitorString(int numberOfVisitors) {
 		numberOfVisitors = Math.abs(numberOfVisitors);
 		String ret = String.valueOf(numberOfVisitors) + " visitor";
-		if (numberOfVisitors > 1) {
+		if (numberOfVisitors != 1) {
 			ret = ret + "s";
 		}
 		return ret;

@@ -110,19 +110,20 @@ public class ClientThread extends Thread {
 				BufferedReader in = new BufferedReader( new InputStreamReader(client.getInputStream()));
 				PrintStream out = new PrintStream(client.getOutputStream());
 				//Status ausgabe
-				clientForm.status_txtarea.append("Visit with "+count+" visitors requested...\n");
+				clientForm.status_txtarea.append("Visit with "+getVisitorString(count)+" requested...\n");
 				//Anfrage und Anwort zum Server
 				out.write(count);
 				int anzahl = (byte)in.read();
 				//Status ausgabe
-				clientForm.status_txtarea.append("Visit with "+count+" visitors enter the tunnel\n");
+				clientForm.status_txtarea.append("Visit with "+getVisitorString(count)+" enter the tunnel\n");
 				synchronized (clientForm.listModel) {
-					if (anzahl == 1) {
-						clientForm.listModel.addElement(anzahl+" visitor");
-					}
-					else {
-						clientForm.listModel.addElement(anzahl+" visitors");
-					}
+					clientForm.listModel.addElement(getVisitorString(count));
+//					if (anzahl == 1) {
+//						clientForm.listModel.addElement(anzahl+" visitor");
+//					}
+//					else {
+//						clientForm.listModel.addElement(anzahl+" visitors");
+//					}
 				}
 				//wenn Verbindungsfehler
 			} catch (IOException e) {
@@ -146,7 +147,7 @@ public class ClientThread extends Thread {
 				BufferedReader in = new BufferedReader( new InputStreamReader(client.getInputStream()));
 				PrintStream out = new PrintStream(client.getOutputStream());
 				//Status ausgabe
-				clientForm.status_txtarea.append("Visit with "+Math.abs(count)+" visitors finished\n");
+				clientForm.status_txtarea.append("Visit with "+getVisitorString(count)+" finished\n");
 				//Anfrage und Anwort zum Server
 				out.write(count);
 				int anzahl = (byte)in.read();
@@ -208,5 +209,20 @@ public class ClientThread extends Thread {
 	 */
 	public void behandleException(Exception e) {
 		e.printStackTrace();
+	}
+	
+	/**
+	 * getVisitor String
+	 * gibt Einzahl oder Mehrzahl zurueck
+	 * @param numberOfVisitors
+	 * @return "visitor" or "visitors"
+	 */
+	private String getVisitorString(int numberOfVisitors) {
+		numberOfVisitors = Math.abs(numberOfVisitors);
+		String ret = String.valueOf(numberOfVisitors) + " visitor";
+		if (numberOfVisitors != 1) {
+			ret = ret + "s";
+		}
+		return ret;
 	}
 }

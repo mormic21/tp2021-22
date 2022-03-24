@@ -96,7 +96,7 @@ public class GuidesMonitor {
 	private String getGuidesString(int numberOfGuides) {
 		numberOfGuides = Math.abs(numberOfGuides);
 		String ret = String.valueOf(numberOfGuides) + " guide";
-		if (numberOfGuides > 1) {
+		if (numberOfGuides != 1) {
 			ret = ret + "s";
 		}
 		return ret;
