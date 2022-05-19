@@ -1,4 +1,4 @@
-package net.tfobz.tunnel.client;
+package net.tfobz.eventQuene.tunnel.client;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.concurrent.*;
